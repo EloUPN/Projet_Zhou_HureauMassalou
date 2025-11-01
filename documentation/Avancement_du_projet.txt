@@ -1,0 +1,6 @@
+01/11/2025 - Elodie
+
+Création du dépôt sur GitHub
+Téléchargement d'un jeu de données en CSV sur KAGGLE
+Création du fichier "lecteur_csv.py" avec 2 classes
+Création d'un main qui appelle lecteur_csv
