@@ -4,3 +4,9 @@ Création du dépôt sur GitHub
 Téléchargement d'un jeu de données en CSV sur KAGGLE
 Création du fichier "lecteur_csv.py" avec 2 classes
 Création d'un main qui appelle lecteur_csv
+
+16/11/2025 - Elodie
+
+Création du ficher "operation.py" qui supprimer les doublons du fichier csv
+Création du fichier "exporter.py" qui crée un nouveau fichier csv avec la date et l'heure, à partir d'une table panda
+.gitignore : ignorer les results pour pas polluer GitHub
