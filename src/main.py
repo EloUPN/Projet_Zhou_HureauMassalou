@@ -8,8 +8,14 @@ bdd = BaseDeDonnees()
 # 2. Ajouter un CSV (exemple)
 bdd.ajouter_table("data_fitness", "data/data_doublons.csv")
 
-# 3. Supprimer doublons
-new_table = op.supprimer_doublons(bdd.get_table("data_fitness"), ignorer_colonnes=["record_id"])
+# Récupérer la table
+table = bdd.get_table("data_fitness")
+
+# 3. Suppression
+op.nettoyer_espaces(table)
+op.supprimer_doublons(table, ignorer_colonnes=["id"])
+op.supprimer_lignes_vides(table)
+op.supprimer_colonnes_specifiques(table, ["gender"])
 
 # 4. Exporter la nouvelle table
-exporter_table(new_table)
+exporter_table(table, prefixe="data_fitness_clean")
