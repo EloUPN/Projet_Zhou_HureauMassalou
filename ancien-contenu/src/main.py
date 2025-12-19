@@ -16,6 +16,7 @@ op.nettoyer_espaces(table)
 op.supprimer_doublons(table, ignorer_colonnes=["id"])
 op.supprimer_lignes_vides(table)
 op.supprimer_colonnes_specifiques(table, ["gender"])
+op.corriger_types(table)
 
 # 4. Exporter la nouvelle table
 exporter_table(table, prefixe="data_fitness_clean")

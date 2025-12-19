@@ -1,4 +1,6 @@
 from lecture_csv import Table
+import pandas as pd
+import re
 
 def supprimer_doublons(table, ignorer_colonnes=None):
     """
@@ -127,8 +129,53 @@ def nettoyer_espaces(table):
 
     # Application colonne par colonne
     for col in table.data.columns:
-        if table.data[col].dtype == object:  # uniquement sur colonnes texte
-            table.data[col] = table.data[col].apply(clean_value)
+        table.data[col] = table.data[col].apply(clean_value)
 
     print("Espaces et caractères invisibles nettoyés.")
+    return table.data
+
+
+def corriger_types(table):
+    """
+    Corrige les types :
+    - convertit en nombres quand possible
+    - convertit en dates quand possible
+    """
+
+    if table.data is None:
+        print("Aucune donnée à nettoyer.")
+        return
+
+    df = table.data.copy()
+
+    for col in df.columns:
+
+        # Nettoyage préliminaire : enlever espaces invisibles + tab + retour ligne
+        df[col] = df[col].apply(
+            lambda x: re.sub(r"[\u200B-\u200F\u202A-\u202E\u2060-\u206F]+", "", str(x))
+            if not pd.isna(x) else x
+        )
+
+        # Enlever les espaces internes pour les nombres (ex : "5 200" -> "5200")
+        df[col] = df[col].apply(
+            lambda x: x.replace(" ", "") if isinstance(x, str) else x
+        )
+
+        # Remplacer virgules par points
+        df[col] = df[col].apply(
+            lambda x: x.replace(",", ".") if isinstance(x, str) else x
+        )
+
+        # Conversion numérique
+        df[col] = pd.to_numeric(df[col], errors='ignore')
+
+        # Conversion date
+        if df[col].dtype == object:
+            try:
+                df[col] = pd.to_datetime(df[col], errors='raise')
+            except:
+                pass
+
+    table.data = df
+    print("Types corrigés (version robuste).")
     return table.data

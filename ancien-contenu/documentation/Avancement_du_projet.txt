@@ -21,3 +21,10 @@ Création du fichier "exporter.py" qui crée un nouveau fichier csv avec la date
 
 19/11/2025 - Elodie
 Ajout de fonction dans le fichier "operation.py"
+
+26/11/2025 - Elodie
+Ajout de fonction dans le fichier "operation.py" pour nettoyer les espaces et correction des types de données
+
+A revoir la prochaine fois :
+Le code n'a pas réussi à transformer la ligne 13 : "52" en 52, il ajoute plein de ,,,, à la fin
+Revoir le nettoyage d'espace et choisir entre nettoyer tous les espaces ou laisser un espace
