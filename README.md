@@ -7,13 +7,6 @@ Ce dépôt contient l’implémentation complète d’un agent intelligent de ne
 
 ## 📁 Structure du dépôt
 
-.
-├── .git
-├── ancien-contenu
-├── files
-└── rapport
-
-
 | Dossier | Description |
 |--------|-------------|
 | `.git` | Fichiers internes de gestion Git |
