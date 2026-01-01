@@ -1,4 +1,4 @@
-# 🤖 Agent IA Modulaire de Nettoyage de CSV
+# 🤖 Smart data cleaner
 
 Ce dépôt contient l’implémentation complète d’un agent intelligent de nettoyage de fichiers CSV basé sur Mistral AI, ainsi que tous les fichiers nécessaires à la rédaction et compilation du rapport du projet.
 
