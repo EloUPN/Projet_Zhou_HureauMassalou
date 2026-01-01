@@ -2,17 +2,16 @@
 
 Ce dépôt contient l’implémentation complète d’un agent intelligent de nettoyage de fichiers CSV basé sur Mistral AI, ainsi que tous les fichiers nécessaires à la rédaction et compilation du rapport du projet.
 
-Le dépôt est public et conforme aux exigences de rendu.
 
 ---
 
 ## 📁 Structure du dépôt
 
 .
-|-- .git
-|-- ancien-contenu
-|-- files
-|-- rapport
+├── .git
+├── ancien-contenu
+├── files
+└── rapport
 
 
 | Dossier | Description |
@@ -26,11 +25,9 @@ Le dépôt est public et conforme aux exigences de rendu.
 
 ## ▶️ Exécution du projet
 
-⚠️ **Le projet s’exécute exclusivement depuis le dossier `files/`.**
+⚠️ **Le contenu du projet (code) se trouve exclusivement depuis le dossier `files/`.**
 
-➡️ Toutes les instructions d’installation, d’exécution et d’utilisation sont détaillées ici :
-
-files/README.md
+➡️ Toutes les instructions d’installation, d’exécution et d’utilisation sont détaillées dans le README de ce dossier.
 
 
 Ce README interne explique :
@@ -51,11 +48,9 @@ Le dossier `rapport/` contient :
 - les fichiers de compilation
 - les ressources nécessaires à la génération du document final
 
-Il est conforme à la consigne demandant la présence d’un répertoire `rapport`.
-
 ---
 
-## ℹ️ Remarque importante
+## ℹ️ Remarque
 
 Le dossier `ancien-contenu/` est conservé uniquement à titre d’archive.
 
