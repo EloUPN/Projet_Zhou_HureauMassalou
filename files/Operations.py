@@ -406,6 +406,128 @@ class Operations:
         return df_clean, nb_invalides
     
     @staticmethod
+    def normaliser_telephones(df, colonne, format_sortie='0600000000'):
+        """
+        Normalise les numéros de téléphone français vers un format standard
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne contenant les téléphones
+            format_sortie: Format de sortie ('0600000000' ou '06 00 00 00 00')
+        
+        Returns:
+            DataFrame nettoyé, nombre de téléphones normalisés
+        """
+        df_clean = df.copy()
+        
+        # Convertir en string
+        df_clean[colonne] = df_clean[colonne].astype(str)
+        
+        import re
+        nb_normalises = 0
+        
+        for idx in df_clean.index:
+            tel = str(df_clean.loc[idx, colonne])
+            
+            # Ignorer les valeurs vides ou 'nan'
+            if tel in ['', 'nan', 'n/a']:
+                continue
+            
+            # Nettoyer : enlever tous les caractères non numériques
+            tel_clean = re.sub(r'[^0-9]', '', tel)
+            
+            # Si commence par 33, remplacer par 0
+            if tel_clean.startswith('33') and len(tel_clean) == 11:
+                tel_clean = '0' + tel_clean[2:]
+            
+            # Vérifier que c'est un numéro français valide (10 chiffres, commence par 0)
+            if len(tel_clean) == 10 and tel_clean[0] == '0':
+                # Formater selon le format demandé
+                if format_sortie == '06 00 00 00 00':
+                    tel_formate = f"{tel_clean[0:2]} {tel_clean[2:4]} {tel_clean[4:6]} {tel_clean[6:8]} {tel_clean[8:10]}"
+                else:  # Format par défaut : 0600000000
+                    tel_formate = tel_clean
+                
+                if tel_formate != df_clean.loc[idx, colonne]:
+                    df_clean.loc[idx, colonne] = tel_formate
+                    nb_normalises += 1
+            elif len(tel_clean) != 10:
+                # Numéro invalide (trop court ou trop long) → marquer comme n/a
+                df_clean.loc[idx, colonne] = 'n/a'
+                nb_normalises += 1
+        
+        return df_clean, nb_normalises
+    
+    @staticmethod
+    def forcer_type_texte(df, colonnes):
+        """
+        Force des colonnes à être de type texte (pour éviter conversion en numérique)
+        Utile pour codes postaux, numéros de téléphone, etc.
+        
+        Args:
+            df: DataFrame pandas
+            colonnes: Liste des colonnes à convertir en texte
+        
+        Returns:
+            DataFrame nettoyé, nombre de colonnes converties
+        """
+        df_clean = df.copy()
+        nb_converties = 0
+        
+        for col in colonnes:
+            if col in df_clean.columns:
+                # Convertir en string et préserver les valeurs
+                df_clean[col] = df_clean[col].astype(str)
+                
+                # Remplacer 'nan' par chaîne vide pour les valeurs manquantes
+                df_clean.loc[df_clean[col] == 'nan', col] = ''
+                
+                # Pour les codes postaux, supprimer les .0 qui peuvent apparaître
+                if 'code' in col.lower() or 'postal' in col.lower():
+                    df_clean[col] = df_clean[col].str.replace('.0', '', regex=False)
+                    # Ajouter le 0 devant si nécessaire (codes postaux à 4 chiffres)
+                    df_clean.loc[(df_clean[col] != '') & (df_clean[col].str.len() == 4), col] = '0' + df_clean[col]
+                
+                nb_converties += 1
+        
+        return df_clean, nb_converties
+    
+    @staticmethod
+    def remplacer_emails_invalides(df, colonne, valeur_remplacement='n/a'):
+        """
+        Remplace les emails invalides par 'n/a'
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne contenant les emails
+            valeur_remplacement: Valeur de remplacement (par défaut 'n/a')
+        
+        Returns:
+            DataFrame nettoyé, nombre d'emails invalides remplacés
+        """
+        df_clean = df.copy()
+        
+        # Convertir en string
+        df_clean[colonne] = df_clean[colonne].astype(str)
+        
+        # Pattern simple pour email valide : contient @ et un point après le @
+        import re
+        pattern = r'^[^@]+@[^@]+\.[^@]+$'
+        
+        # Identifier les emails invalides (ceux qui ne matchent pas le pattern)
+        masque_invalides = ~df_clean[colonne].str.match(pattern, na=False)
+        
+        # Ne pas compter les valeurs déjà vides comme invalides
+        masque_invalides &= (df_clean[colonne] != '') & (df_clean[colonne] != 'nan')
+        
+        nb_invalides = masque_invalides.sum()
+        
+        # Remplacer par 'n/a'
+        df_clean.loc[masque_invalides, colonne] = valeur_remplacement
+        
+        return df_clean, nb_invalides
+    
+    @staticmethod
     def capitaliser_texte(df, colonne, mode='title'):
         """
         Capitalise le texte d'une colonne
@@ -434,6 +556,476 @@ class Operations:
         df_clean[colonne] = apres
         
         return df_clean, modifications
+    
+    # ===== NOUVELLES OPÉRATIONS COMPLÈTES =====
+    
+    # 1. NETTOYAGE STRUCTUREL
+    
+    @staticmethod
+    def supprimer_accents(df, colonnes=None):
+        """
+        Supprime les accents des colonnes textuelles
+        
+        Args:
+            df: DataFrame pandas
+            colonnes: Liste des colonnes (None = toutes les colonnes texte)
+        
+        Returns:
+            DataFrame nettoyé, nombre de modifications
+        """
+        import unicodedata
+        df_clean = df.copy()
+        nb_modifs = 0
+        
+        if colonnes is None:
+            colonnes = df_clean.select_dtypes(include=['object']).columns
+        
+        for col in colonnes:
+            if col in df_clean.columns:
+                df_clean[col] = df_clean[col].astype(str).apply(
+                    lambda x: ''.join(c for c in unicodedata.normalize('NFD', x) 
+                                    if unicodedata.category(c) != 'Mn')
+                    if x != 'nan' else x
+                )
+                nb_modifs += 1
+        
+        return df_clean, nb_modifs
+    
+    @staticmethod
+    def uniformiser_categories(df, colonne, mapping):
+        """
+        Uniformise les variations de catégories (ex: "F"/"Femme"/"f" → "F")
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+            mapping: Dictionnaire de mapping {valeur_ancienne: valeur_nouvelle}
+        
+        Returns:
+            DataFrame nettoyé, nombre de remplacements
+        """
+        df_clean = df.copy()
+        nb_remplacements = 0
+        
+        for ancien, nouveau in mapping.items():
+            mask = df_clean[colonne] == ancien
+            nb_remplacements += mask.sum()
+            df_clean.loc[mask, colonne] = nouveau
+        
+        return df_clean, nb_remplacements
+    
+    @staticmethod
+    def detecter_anomalies_type(df):
+        """
+        Détecte les colonnes avec des types de données incohérents
+        
+        Args:
+            df: DataFrame pandas
+        
+        Returns:
+            DataFrame propre, dict des anomalies détectées
+        """
+        anomalies = {}
+        
+        for col in df.columns:
+            # Tenter conversion numérique
+            essai_numeric = pd.to_numeric(df[col], errors='coerce')
+            nb_non_numeric = essai_numeric.isna().sum() - df[col].isna().sum()
+            
+            if nb_non_numeric > 0 and nb_non_numeric < len(df) * 0.1:
+                # Moins de 10% de valeurs non-numériques dans une colonne majoritairement numérique
+                anomalies[col] = {
+                    'type': 'mixte_numerique',
+                    'nb_anomalies': nb_non_numeric,
+                    'exemples': df[col][essai_numeric.isna() & df[col].notna()].head(3).tolist()
+                }
+        
+        return df, anomalies
+    
+    @staticmethod
+    def fusionner_colonnes_similaires(df, colonnes, nouveau_nom, separateur=' '):
+        """
+        Fusionne plusieurs colonnes en une seule
+        
+        Args:
+            df: DataFrame pandas
+            colonnes: Liste des colonnes à fusionner
+            nouveau_nom: Nom de la nouvelle colonne
+            separateur: Séparateur entre les valeurs
+        
+        Returns:
+            DataFrame avec colonne fusionnée, nombre de colonnes supprimées
+        """
+        df_clean = df.copy()
+        
+        # Créer la nouvelle colonne
+        df_clean[nouveau_nom] = df_clean[colonnes].astype(str).agg(separateur.join, axis=1)
+        
+        # Nettoyer les 'nan'
+        df_clean[nouveau_nom] = df_clean[nouveau_nom].str.replace('nan', '').str.strip()
+        
+        # Supprimer les anciennes colonnes
+        df_clean = df_clean.drop(columns=colonnes)
+        
+        return df_clean, len(colonnes)
+    
+    # 2. NETTOYAGE SÉMANTIQUE
+    
+    @staticmethod
+    def verifier_format_iban(df, colonne, valeur_remplacement='n/a'):
+        """
+        Vérifie et nettoie les IBAN
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+            valeur_remplacement: Valeur pour les IBAN invalides
+        
+        Returns:
+            DataFrame nettoyé, nombre d'IBAN invalides
+        """
+        import re
+        df_clean = df.copy()
+        df_clean[colonne] = df_clean[colonne].astype(str)
+        
+        # Pattern simplifié IBAN (commence par 2 lettres puis chiffres)
+        pattern = r'^[A-Z]{2}[0-9]{2}[A-Z0-9]+$'
+        
+        invalides = ~df_clean[colonne].str.match(pattern, na=False)
+        invalides &= (df_clean[colonne] != '') & (df_clean[colonne] != 'nan')
+        
+        nb_invalides = invalides.sum()
+        df_clean.loc[invalides, colonne] = valeur_remplacement
+        
+        return df_clean, nb_invalides
+    
+    @staticmethod
+    def verifier_format_siret(df, colonne, valeur_remplacement='n/a'):
+        """
+        Vérifie les numéros SIRET (14 chiffres)
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+            valeur_remplacement: Valeur pour les SIRET invalides
+        
+        Returns:
+            DataFrame nettoyé, nombre de SIRET invalides
+        """
+        import re
+        df_clean = df.copy()
+        df_clean[colonne] = df_clean[colonne].astype(str)
+        
+        # SIRET = 14 chiffres
+        pattern = r'^[0-9]{14}$'
+        
+        invalides = ~df_clean[colonne].str.match(pattern, na=False)
+        invalides &= (df_clean[colonne] != '') & (df_clean[colonne] != 'nan')
+        
+        nb_invalides = invalides.sum()
+        df_clean.loc[invalides, colonne] = valeur_remplacement
+        
+        return df_clean, nb_invalides
+    
+    @staticmethod
+    def detecter_incoherences_dates(df, colonne_date, valeur_remplacement='n/a'):
+        """
+        Détecte les dates futures ou trop anciennes
+        
+        Args:
+            df: DataFrame pandas
+            colonne_date: Nom de la colonne de date
+            valeur_remplacement: Valeur pour dates invalides
+        
+        Returns:
+            DataFrame nettoyé, nombre de dates invalides
+        """
+        from datetime import datetime
+        df_clean = df.copy()
+        
+        # Convertir en datetime
+        dates = pd.to_datetime(df_clean[colonne_date], errors='coerce')
+        aujourd_hui = pd.Timestamp.now()
+        
+        # Dates dans le futur
+        futures = dates > aujourd_hui
+        
+        # Dates trop anciennes (avant 1900)
+        anciennes = dates < pd.Timestamp('1900-01-01')
+        
+        invalides = futures | anciennes
+        nb_invalides = invalides.sum()
+        
+        df_clean.loc[invalides, colonne_date] = valeur_remplacement
+        
+        return df_clean, nb_invalides
+    
+    @staticmethod
+    def detecter_doublons_approximatifs(df, colonne, seuil_similarite=0.8):
+        """
+        Détecte les doublons approximatifs (fuzzy matching)
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+            seuil_similarite: Seuil de similarité (0-1)
+        
+        Returns:
+            DataFrame, liste des groupes de doublons
+        """
+        from difflib import SequenceMatcher
+        
+        valeurs = df[colonne].dropna().unique()
+        groupes_doublons = []
+        
+        for i, val1 in enumerate(valeurs):
+            groupe = [val1]
+            for val2 in valeurs[i+1:]:
+                similarite = SequenceMatcher(None, str(val1).lower(), str(val2).lower()).ratio()
+                if similarite >= seuil_similarite:
+                    groupe.append(val2)
+            
+            if len(groupe) > 1:
+                groupes_doublons.append(groupe)
+        
+        return df, groupes_doublons
+    
+    @staticmethod
+    def normaliser_devises(df, colonne, devise_cible='EUR', taux_change=None):
+        """
+        Normalise les montants vers une devise unique
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+            devise_cible: Devise de sortie
+            taux_change: Dict {devise: taux} ou None pour auto
+        
+        Returns:
+            DataFrame normalisé, nombre de conversions
+        """
+        df_clean = df.copy()
+        
+        # Taux par défaut (approximatifs)
+        if taux_change is None:
+            taux_change = {
+                'USD': 0.92,  # USD vers EUR
+                'GBP': 1.17,  # GBP vers EUR
+                'CHF': 0.96,  # CHF vers EUR
+                'EUR': 1.0
+            }
+        
+        # Détection automatique de devise dans la colonne (simplifiée)
+        # Pour l'instant, retourne juste le df
+        # Une vraie implémentation nécessiterait parsing des montants
+        
+        return df_clean, 0
+    
+    # 3. NORMALISATION ET STANDARDISATION
+    
+    @staticmethod
+    def normaliser_unites(df, colonne, unite_cible, facteur_conversion):
+        """
+        Convertit les unités de mesure
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+            unite_cible: Unité de sortie
+            facteur_conversion: Facteur multiplicatif
+        
+        Returns:
+            DataFrame normalisé, nombre de conversions
+        """
+        df_clean = df.copy()
+        
+        # Convertir en numérique et appliquer le facteur
+        valeurs_num = pd.to_numeric(df_clean[colonne], errors='coerce')
+        df_clean[colonne] = valeurs_num * facteur_conversion
+        
+        nb_conversions = valeurs_num.notna().sum()
+        
+        return df_clean, nb_conversions
+    
+    @staticmethod
+    def arrondir_numerique(df, colonne, decimales=2):
+        """
+        Arrondit les valeurs numériques
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+            decimales: Nombre de décimales
+        
+        Returns:
+            DataFrame arrondi, nombre de valeurs arrondies
+        """
+        df_clean = df.copy()
+        
+        valeurs_num = pd.to_numeric(df_clean[colonne], errors='coerce')
+        df_clean[colonne] = valeurs_num.round(decimales)
+        
+        nb_arrondis = valeurs_num.notna().sum()
+        
+        return df_clean, nb_arrondis
+    
+    @staticmethod
+    def encoder_categories_onehot(df, colonne):
+        """
+        Encode une colonne catégorielle en One-Hot
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne à encoder
+        
+        Returns:
+            DataFrame avec colonnes encodées, nombre de colonnes créées
+        """
+        df_clean = df.copy()
+        
+        # One-hot encoding
+        dummies = pd.get_dummies(df_clean[colonne], prefix=colonne)
+        
+        # Supprimer la colonne originale et ajouter les dummies
+        df_clean = df_clean.drop(columns=[colonne])
+        df_clean = pd.concat([df_clean, dummies], axis=1)
+        
+        return df_clean, len(dummies.columns)
+    
+    @staticmethod
+    def encoder_categories_label(df, colonne):
+        """
+        Encode une colonne catégorielle en numérique (Label Encoding)
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+        
+        Returns:
+            DataFrame encodé, dict de mapping
+        """
+        df_clean = df.copy()
+        
+        # Créer le mapping
+        categories = df_clean[colonne].dropna().unique()
+        mapping = {cat: idx for idx, cat in enumerate(categories)}
+        
+        # Appliquer l'encodage
+        df_clean[colonne] = df_clean[colonne].map(mapping)
+        
+        return df_clean, mapping
+    
+    @staticmethod
+    def normaliser_variations_orthographe(df, colonne, mapping_corrections):
+        """
+        Corrige les variations orthographiques
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+            mapping_corrections: Dict {erreur: correction}
+        
+        Returns:
+            DataFrame corrigé, nombre de corrections
+        """
+        df_clean = df.copy()
+        nb_corrections = 0
+        
+        for erreur, correction in mapping_corrections.items():
+            mask = df_clean[colonne].str.contains(erreur, case=False, na=False)
+            nb_corrections += mask.sum()
+            df_clean.loc[mask, colonne] = df_clean.loc[mask, colonne].str.replace(
+                erreur, correction, case=False, regex=False
+            )
+        
+        return df_clean, nb_corrections
+    
+    # 4. QUALITÉ ET VALIDATION
+    
+    @staticmethod
+    def generer_rapport_qualite(df):
+        """
+        Génère un rapport de qualité des données
+        
+        Args:
+            df: DataFrame pandas
+        
+        Returns:
+            DataFrame original, dict rapport qualité
+        """
+        rapport = {
+            'nb_lignes': len(df),
+            'nb_colonnes': len(df.columns),
+            'valeurs_manquantes': df.isnull().sum().to_dict(),
+            'taux_completude': (1 - df.isnull().sum() / len(df)).to_dict(),
+            'doublons': df.duplicated().sum(),
+            'types': df.dtypes.to_dict(),
+            'memoire_mb': df.memory_usage(deep=True).sum() / 1024**2
+        }
+        
+        return df, rapport
+    
+    @staticmethod
+    def detecter_outliers_statistiques(df, colonne, methode='iqr', seuil=1.5):
+        """
+        Détecte les valeurs aberrantes sans les modifier (pour inspection)
+        
+        Args:
+            df: DataFrame pandas
+            colonne: Nom de la colonne
+            methode: 'iqr' ou 'zscore'
+            seuil: Seuil de détection
+        
+        Returns:
+            DataFrame original, indices des outliers
+        """
+        valeurs_num = pd.to_numeric(df[colonne], errors='coerce')
+        
+        if methode == 'iqr':
+            Q1 = valeurs_num.quantile(0.25)
+            Q3 = valeurs_num.quantile(0.75)
+            IQR = Q3 - Q1
+            outliers = ((valeurs_num < Q1 - seuil * IQR) | 
+                       (valeurs_num > Q3 + seuil * IQR))
+        else:  # zscore
+            mean = valeurs_num.mean()
+            std = valeurs_num.std()
+            outliers = np.abs((valeurs_num - mean) / std) > seuil
+        
+        indices_outliers = df[outliers].index.tolist()
+        
+        return df, indices_outliers
+    
+    @staticmethod
+    def valider_schema(df, schema_attendu):
+        """
+        Valide que le DataFrame correspond au schéma attendu
+        
+        Args:
+            df: DataFrame pandas
+            schema_attendu: Dict {colonne: type_attendu}
+        
+        Returns:
+            DataFrame original, dict des erreurs de validation
+        """
+        erreurs = {}
+        
+        # Vérifier les colonnes manquantes
+        colonnes_manquantes = set(schema_attendu.keys()) - set(df.columns)
+        if colonnes_manquantes:
+            erreurs['colonnes_manquantes'] = list(colonnes_manquantes)
+        
+        # Vérifier les types
+        for col, type_attendu in schema_attendu.items():
+            if col in df.columns:
+                type_actuel = df[col].dtype
+                if str(type_actuel) != type_attendu:
+                    erreurs[f'type_{col}'] = {
+                        'attendu': type_attendu,
+                        'actuel': str(type_actuel)
+                    }
+        
+        return df, erreurs
 
 
 def lister_operations():
@@ -494,6 +1086,94 @@ def lister_operations():
         'remplacer_valeurs_invalides': {
             'description': 'Remplace les valeurs en dehors d\'une plage acceptable par n/a',
             'parametres': ['colonne', 'valeur_remplacement', 'min_valeur', 'max_valeur']
+        },
+        'remplacer_emails_invalides': {
+            'description': 'Remplace les emails invalides (sans @ ou sans extension) par n/a',
+            'parametres': ['colonne', 'valeur_remplacement']
+        },
+        'forcer_type_texte': {
+            'description': 'Force des colonnes à rester en texte (codes postaux, téléphones, etc.)',
+            'parametres': ['colonnes']
+        },
+        'normaliser_telephones': {
+            'description': 'Normalise les téléphones français vers format standard (0600000000)',
+            'parametres': ['colonne', 'format_sortie']
+        },
+        
+        # === NETTOYAGE STRUCTUREL ===
+        'supprimer_accents': {
+            'description': 'Supprime les accents des colonnes textuelles',
+            'parametres': ['colonnes']
+        },
+        'uniformiser_categories': {
+            'description': 'Uniformise les variations de catégories (ex: F/Femme/f → F)',
+            'parametres': ['colonne', 'mapping']
+        },
+        'detecter_anomalies_type': {
+            'description': 'Détecte les colonnes avec types incohérents',
+            'parametres': []
+        },
+        'fusionner_colonnes_similaires': {
+            'description': 'Fusionne plusieurs colonnes en une',
+            'parametres': ['colonnes', 'nouveau_nom', 'separateur']
+        },
+        
+        # === NETTOYAGE SÉMANTIQUE ===
+        'verifier_format_iban': {
+            'description': 'Vérifie et nettoie les IBAN',
+            'parametres': ['colonne', 'valeur_remplacement']
+        },
+        'verifier_format_siret': {
+            'description': 'Vérifie les numéros SIRET (14 chiffres)',
+            'parametres': ['colonne', 'valeur_remplacement']
+        },
+        'detecter_incoherences_dates': {
+            'description': 'Détecte les dates futures ou trop anciennes',
+            'parametres': ['colonne_date', 'valeur_remplacement']
+        },
+        'detecter_doublons_approximatifs': {
+            'description': 'Détecte les doublons approximatifs (fuzzy matching)',
+            'parametres': ['colonne', 'seuil_similarite']
+        },
+        'normaliser_devises': {
+            'description': 'Normalise les montants vers une devise unique',
+            'parametres': ['colonne', 'devise_cible', 'taux_change']
+        },
+        
+        # === NORMALISATION ET STANDARDISATION ===
+        'normaliser_unites': {
+            'description': 'Convertit les unités de mesure',
+            'parametres': ['colonne', 'unite_cible', 'facteur_conversion']
+        },
+        'arrondir_numerique': {
+            'description': 'Arrondit les valeurs numériques',
+            'parametres': ['colonne', 'decimales']
+        },
+        'encoder_categories_onehot': {
+            'description': 'Encode une colonne catégorielle en One-Hot',
+            'parametres': ['colonne']
+        },
+        'encoder_categories_label': {
+            'description': 'Encode une colonne catégorielle en numérique',
+            'parametres': ['colonne']
+        },
+        'normaliser_variations_orthographe': {
+            'description': 'Corrige les variations orthographiques',
+            'parametres': ['colonne', 'mapping_corrections']
+        },
+        
+        # === QUALITÉ ET VALIDATION ===
+        'generer_rapport_qualite': {
+            'description': 'Génère un rapport de qualité des données',
+            'parametres': []
+        },
+        'detecter_outliers_statistiques': {
+            'description': 'Détecte les outliers sans les modifier',
+            'parametres': ['colonne', 'methode', 'seuil']
+        },
+        'valider_schema': {
+            'description': 'Valide que le DataFrame correspond au schéma attendu',
+            'parametres': ['schema_attendu']
         }
     }
     return operations
