@@ -1,0 +1,26 @@
+nom,prenom,age,email,ville,code_postal,telephone,salaire,date_embauche,departement,statut,heures_semaine,numero_employe
+Dupont,Jean,28,jean.dupont@email.com,Paris,75001,0612345678,35000.0,YYYY-MM-DD,Ventes,CDI,35,EMP001
+Martin,  Sophie  ,32,sophie.martin@email.com,Lyon,69002,06 87 65 43 21,42000.0,YYYY-MM-DD,Marketing,CDI,35,EMP002
+Dupont,Jean,28,jean.dupont@email.com,Paris,75001,0612345678,35000.0,YYYY-MM-DD,Ventes,CDI,35,EMP001
+Bernard,,45,n/a,Marseille,13001,0698765432,38000.0,,IT,CDI,35,EMP003
+Petit,Marie,n/a,marie.petit@email.com,Toulouse,31000,+33 6 12 34 56 78,,YYYY-MM-DD,RH,CDD,35,EMP004
+,Lucas,26,lucas@test.com,Nice,06000,06.11.22.33.44,31000.0,YYYY-MM-DD,Ventes,CDI,35,EMP005
+Rousseau,Emma,29,emma.rousseau@email.com,,75015,0123456789,39000.0,YYYY-MM-DD,Marketing,CDI,35,EMP006
+Moreau,Thomas,n/a,thomas.moreau@email.com,Bordeaux,33000,0612345678,44000.0,YYYY-MM-DD,IT,CDI,35,EMP007
+Laurent,Camille,31,camille.laurent@email.com,Nantes,44000,06-12-34-56-78,36000.0,,Ventes,CDI,35,EMP008
+Girard,Alexandre,27,alexandre.girard@email.com,Strasbourg,67000,+33612345678,40000.0,YYYY-MM-DD,IT,CDI,35,EMP009
+Martin,  Sophie  ,32,sophie.martin@email.com,Lyon,69002,06 87 65 43 21,42000.0,YYYY-MM-DD,Marketing,CDI,35,EMP002
+Roux,Julie,35,n/a,Lille,59000,0698765432,45000.0,YYYY-MM-DD,RH,CDI,35,EMP010
+Fournier,Nicolas,24,nicolas.fournier@email.com,Rennes,35000,1234567890,29000.0,YYYY-MM-DD,Ventes,Stage,35,EMP011
+Simon,Lea,30,lea.simon@email.com,Montpellier,34000,0612345678,37000.0,YYYY-MM-DD,Marketing,CDI,35,EMP012
+Blanc,Pierre,n/a,pierre.blanc@email.com,Grenoble,38000,0687654321,-5000.0,YYYY-MM-DD,IT,CDI,n/a,EMP013
+Noir,Sophie,42,sophie.noir@email.com,Nantes,44000,06,50000.0,YYYY-MM-DD,RH,CDI,35,
+Martin,Paul,35,paul.martin@email.com,Paris,n/a,0612345678,55000.0,YYYY-MM-DD,Ventes,CDI,35,EMP015
+Durand,Alice,28,alice.durand@email.com,Lyon,n/a,0698765432,33000.0,YYYY-MM-DD,Marketing,CDD,35,EMP016
+Lemoine,Marc,n/a,marc.lemoine@email.com,Toulouse,31000,9999999999,38000.0,YYYY-MM-DD,IT,CDI,n/a,EMP017
+Robert,Julie,45,julie.robert@email.com,Bordeaux,33000,,42000.0,YYYY-MM-DD,RH,CDI,35,EMP018
+Faure,Thomas,32,thomas.faure@email.com,Nice,06000,0612345678,999999.0,YYYY-MM-DD,Ventes,CDI,n/a,EMP019
+Lefebvre,Marie,29,,Paris,75008,0687654321,36000.0,YYYY-MM-DD,Marketing,CDI,35,EMP020
+Garnier,Luc,38,luc.garnier@email.com,Marseille,,0698765432,41000.0,YYYY-MM-DD,IT,CDI,35,EMP021
+Chevalier,Emma,27,emma.chevalier@email.com,Strasbourg,67000,0612345678,34000.0,,Ventes,Freelance,20,EMP022
+Girard,Paul,33,paul.girard@email.com,Lille,59000,0687654321,39000.0,YYYY-MM-DD,Marketing,CDI,n/a,EMP023

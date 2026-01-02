@@ -1,0 +1,22 @@
+nom,prenom,age,email,ville,code_postal,telephone,salaire,date_embauche,departement,statut,heures_semaine,numero_employe
+Dupont,Jean,28,jean.dupont@email.com,Paris,75001.0,0612345678,35000.0,2022-03-15,Ventes,CDI,35,EMP001
+Martin,  Sophie  ,32,sophie.martin@email.com,Lyon,69002.0,0687654321,42000.0,2021-07-20,Marketing,CDI,35,EMP002
+Bernard,,45,paul.bernard@email,Marseille,13001.0,0698765432,38000.0,,IT,CDI,35,EMP003
+Petit,Marie,999,marie.petit@email.com,Toulouse,31000.0,0612345678,n/a,2023-01-10,RH,CDD,35,EMP004
+Rousseau,Emma,29,emma.rousseau@email.com,,75015.0,0123456789,39000.0,2022-11-30,Marketing,CDI,35,EMP006
+Moreau,Thomas,-5,thomas.moreau@email.com,Bordeaux,33000.0,0612345678,44000.0,2021-09-12,IT,CDI,35,EMP007
+Laurent,Camille,31,camille.laurent@email.com,Nantes,44000.0,0612345678,36000.0,,Ventes,CDI,35,EMP008
+Girard,Alexandre,27,alexandre.girard@email.com,Strasbourg,67000.0,0612345678,40000.0,2023-02-28,IT,CDI,35,EMP009
+Roux,Julie,35,julie.roux@invalid,Lille,59000.0,0698765432,45000.0,2020-12-05,RH,CDI,35,EMP010
+Fournier,Nicolas,24,nicolas.fournier@email.com,Rennes,35000.0,1234567890,29000.0,2024-01-15,Ventes,Stage,35,EMP011
+Simon,Lea,30,lea.simon@email.com,Montpellier,34000.0,0612345678,37000.0,2022-08-22,Marketing,CDI,35,EMP012
+Blanc,Pierre,150,pierre.blanc@email.com,Grenoble,38000.0,0687654321,-5000.0,2023-03-10,IT,CDI,999,EMP013
+Noir,Sophie,42,sophie.noir@email.com,Nantes,44000.0,n/a,50000.0,2022-01-15,RH,CDI,35,
+Martin,Paul,35,paul.martin@email.com,Paris,750.0,0612345678,55000.0,2021-11-20,Ventes,CDI,35,EMP015
+Durand,Alice,28,alice.durand@email.com,Lyon,69999999.0,0698765432,33000.0,2023-06-01,Marketing,CDD,35,EMP016
+Lemoine,Marc,-1,marc.lemoine@email.com,Toulouse,31000.0,9999999999,38000.0,2022-09-12,IT,CDI,0,EMP017
+Robert,Julie,45,julie.robert@email.com,Bordeaux,33000.0,nan,42000.0,2021-05-18,RH,CDI,35,EMP018
+Lefebvre,Marie,29,,Paris,75008.0,0687654321,36000.0,2022-12-05,Marketing,CDI,35,EMP020
+Garnier,Luc,38,luc.garnier@email.com,Marseille,,0698765432,41000.0,2021-08-30,IT,CDI,35,EMP021
+Chevalier,Emma,27,emma.chevalier@email.com,Strasbourg,67000.0,0612345678,34000.0,,Ventes,Freelance,20,EMP022
+Girard,Paul,33,paul.girard@email.com,Lille,59000.0,0687654321,39000.0,2023-01-10,Marketing,CDI,-10,EMP023
