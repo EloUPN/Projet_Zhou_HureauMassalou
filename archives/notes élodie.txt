@@ -1,6 +1,0 @@
-elaboration d'un nouveau fichier test plus complexe pour peafiner
-Creation du dossier raw et modification agent pour qu'il extrait les fichiers depuis celui ci
-Problème de dates difficile à résoudre
-Résultats fiabilisés
-abandon de la fonctionnalité de prompt pers car modif => l'agent ignore ou casse.
-Verifier que projet fonctionne si téléchargé depuis github
