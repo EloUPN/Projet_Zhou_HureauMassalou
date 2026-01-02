@@ -36,6 +36,7 @@ SmartData_Cleaner/
 ├── requirements.txt
 └── Raw/                    ← Placez vos fichiers CSV ici
     └── exemple_test.csv
+    └── exemple_test_v2.csv
 ```
 
 ### 6️⃣ Testez !
