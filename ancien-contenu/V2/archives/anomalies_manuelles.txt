@@ -1,0 +1,7 @@
+ligne 4 : doublons ligne$
+ligne 5 : prénom manquant, format date$
+ligne 6 : âge improbable$, salaire manquant$
+ligne 7 : nom manquant
+ligne 8 : ville manquante$
+ligne 9 : age improbable$
+ligne 10: format date
