@@ -1,0 +1,13 @@
+nom,prenom,age,email,ville,salaire,date_embauche
+Dupont,Jean,28,jean.dupont@email.com,Paris,35000.0,2022-03-15
+Martin,  Sophie  ,32,sophie.martin@email.com,Lyon,42000.0,2021-07-20
+Bernard,,45,paul.bernard@email,Marseille,38000.0,15/06/2020
+Petit,Marie,999,marie.petit@email.com,Toulouse,,2023-01-10
+,Lucas,26,lucas@test.com,Nice,31000.0,2023-05-01
+Rousseau,Emma,29,emma.rousseau@email.com,,39000.0,2022-11-30
+Moreau,Thomas,-5,thomas.moreau@email.com,Bordeaux,44000.0,2021-09-12
+Laurent,Camille,31,camille.laurent@email.com,Nantes,36000.0,01-04-2022
+Girard,Alexandre,27,alexandre.girard@email.com,Strasbourg,40000.0,2023-02-28
+Roux,Julie,35,julie.roux@invalid,Lille,45000.0,2020-12-05
+Fournier,Nicolas,24,nicolas.fournier@email.com,Rennes,29000.0,2024-01-15
+Simon,Lea,30,lea.simon@email.com,Montpellier,37000.0,2022-08-22
