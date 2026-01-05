@@ -9,7 +9,6 @@ Ce dépôt contient l’implémentation complète d’un agent intelligent de ne
 
 | Dossier | Description |
 |--------|-------------|
-| `.git` | Fichiers internes de gestion Git |
 | `ancien-contenu/` | Première version abandonnée du projet (non utilisée pour l’évaluation) |
 | `files/` | **Version finale du projet** (code source + README complet) |
 | `rapport/` | Tous les fichiers nécessaires à la compilation du rapport |
