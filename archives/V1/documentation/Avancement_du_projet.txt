@@ -1,0 +1,30 @@
+Mettre à jour sur GIT :
+git add .
+git commit -m "Description"
+git push
+
+Récupérer la MAJ :
+git pull
+
+01/11/2025 - Elodie
+
+Création du dépôt sur GitHub
+Téléchargement d'un jeu de données en CSV sur KAGGLE
+Création du fichier "lecteur_csv.py" avec 2 classes
+Création d'un main qui appelle lecteur_csv
+
+16/11/2025 - Elodie
+
+Création du fichier "operation.py" qui supprimer les doublons du fichier csv
+Création du fichier "exporter.py" qui crée un nouveau fichier csv avec la date et l'heure, à partir d'une table panda
+.gitignore : ignorer les results pour pas polluer GitHub
+
+19/11/2025 - Elodie
+Ajout de fonction dans le fichier "operation.py"
+
+26/11/2025 - Elodie
+Ajout de fonction dans le fichier "operation.py" pour nettoyer les espaces et correction des types de données
+
+A revoir la prochaine fois :
+Le code n'a pas réussi à transformer la ligne 13 : "52" en 52, il ajoute plein de ,,,, à la fin
+Revoir le nettoyage d'espace et choisir entre nettoyer tous les espaces ou laisser un espace
