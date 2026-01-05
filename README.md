@@ -17,7 +17,7 @@ Ce dépôt contient l’implémentation complète d’un agent intelligent de ne
 
 ## ▶️ Exécution du projet
 
-⚠️ **Le contenu du projet (code) se trouve exclusivement depuis le dossier `files/`.**
+⚠️ **Le contenu du projet (code) se trouve exclusivement depuis le dossier `SmartData_Cleaner/`.**
 
 ➡️ Toutes les instructions d’installation, d’exécution et d’utilisation sont détaillées dans le README de ce dossier.
 
