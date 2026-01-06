@@ -43,16 +43,15 @@ Dans un contexte où les organisations collectent des volumes croissants de donn
 
 Ces irrégularités nuisent ainsi à la fiabilité des analyses, à l’intégration des systèmes d’information et à la mise en place de modèles décisionnels ou prédictifs. Dans ce contexte, la correction rapide et systématique des données apparaît comme un levier essentiel : intervenir en amont permet d’éviter l’accumulation d’anomalies au fil du temps et de prévenir une dégradation progressive de la base de données, qui deviendrait alors complexe et coûteuse à corriger a posteriori.
 
-Le projet présenté dans ce rapport s’inscrit dans cette problématique. Il consiste à concevoir et implémenter un pipeline complet de nettoyage, correction et standardisation de bases de données internationales. L’objectif est d’être capable d’intégrer plusieurs sources de données afin d’obtenir un ensemble homogène, exploitable et conforme aux standards de qualité requis pour les traitements en aval.
+Le projet présenté dans ce rapport s’inscrit dans cette problématique. Il consiste à concevoir et implémenter un pipeline\footnote{Un pipeline est une chaîne automatisée d’étapes successives pour déployer/traiter du code/des données.} complet de nettoyage, correction et standardisation de bases de données internationales. L’objectif est d’être capable d’intégrer plusieurs sources de données afin d’obtenir un ensemble homogène, exploitable et conforme aux standards de qualité requis pour les traitements en aval.
 
 Ce projet revêt également une dimension méthodologique. Au-delà de la partie technique, il vise à montrer comment des outils d’automatisation et, plus largement, l’usage de l’intelligence artificielle peuvent faciliter et améliorer les processus de préparation des données. L’IA a notamment permis de guider certaines décisions de normalisation, de détecter des irrégularités et de proposer des règles de transformation cohérentes.
 
-Ainsi, ce travail apporte une contribution à la problématique de la data quality et de l’intégration de données hétérogènes, en mettant en œuvre des méthodes robustes et reproductibles, tout en illustrant l’intérêt d’une approche assistée par l’IA dans un contexte de nettoyage de données à grande échelle.
+Ainsi, ce travail apporte une contribution à la problématique de la data quality et de l’intégration de données hétérogènes en mettant en œuvre des méthodes assistée par l’IA dans un contexte de nettoyage de données.
 
 \newpage
 \section{Environnement de travail}
-Le développement du projet a été réalisé dans un environnement pour faciliter la manipulation de données, l’automatisation des tâches de nettoyage ainsi que l’export des résultats. L’ensemble du pipeline
-\footnote{Un pipeline est une chaîne automatisée d’étapes successives pour déployer/traiter du code/des données.} a été implémenté en Python.
+Le développement du projet a été réalisé dans un environnement pour faciliter la manipulation de données, l’automatisation des tâches de nettoyage ainsi que l’export des résultats. L’ensemble du pipeline a été implémenté en Python.
 
 Le projet a initialement été développé et testé sur des systèmes d’exploitation Windows 11 et Linux, afin d’assurer une meilleure portabilité du code. Suite à des contraintes matérielles, l’ensemble du développement a ensuite été poursuivi exclusivement sous Windows.
 
@@ -106,7 +105,6 @@ L’éditeur de texte principal utilisé est Visual Studio Code, choisi pour son
 
 \newpage
 \section{Description du projet et objectifs}
-Le projet consiste à concevoir et implémenter un système complet de nettoyage, de transformation et de standardisation de données hétérogènes. En général, les données proviennent de sources multiples, sont structurées différemment et présentent des formats incompatibles. Ces variations rendent difficile l’intégration des informations dans un système unique ainsi que l’exploitation analytique ou décisionnelle.
 L’objectif principal du projet est donc de mettre en place un pipeline fiable, automatisé et extensible, capable d’harmoniser plusieurs jeux de données afin de faciliter leur utilisation ultérieure.
 
 Plus précisément, le projet vise à traiter plusieurs types d’anomalies courantes avec des données réelles :
@@ -175,7 +173,7 @@ Les fonctionnalités suivantes ont été implémentées et sont opérationnelles
 
 \subsection*{Fonctionnalités non réalisées}
 
-La reprise automatique des valeurs \textit{``n/a''} à l’aide d’un système de comparaison au sein d’une même colonne n’a pas été implémentée. Le principe envisagé consistait à détecter une valeur manquante sur une ligne donnée, puis à proposer plusieurs valeurs possibles issues des autres lignes de la colonne, tout en laissant la possibilité à l’utilisateur de saisir une valeur personnalisée ou de conserver \textit{``n/a''}.
+La reprise automatique des valeurs \textit{``n/a''} à l’aide d’un système de comparaison au sein d’une même colonne n’a pas été implémentée. Le principe envisagé était trop complexe car il consistait à détecter une valeur manquante sur une ligne donnée, puis à proposer les valeurs les plus probables issues des autres lignes de la colonne, tout en laissant la possibilité à l’utilisateur de saisir une valeur personnalisée ou de conserver \textit{``n/a''}. Certaines colonnes (nom, prénom, salaire, etc.) étaient imprédictibles. Pour alléger l'interface de la console, nous avons décidé de ne pas forcer à ressaisir les valeurs \textit{``n/a''} détectées ou corrigées.
 
 La détection d’incohérences inter-colonnes, par exemple une valeur \textit{Pays = France} associée à une \textit{Devise = USD}, n’a également pas été implémentée. L’identification exhaustive de ce type d’incohérences et la définition des opérations de correction adaptées se sont révélées complexes et particulièrement chronophages. Nous n’avons pas trouvé de solution générique et efficace permettant de traiter l’ensemble de ces cas de manière fiable.
 
@@ -198,7 +196,7 @@ Sur le plan du développement, une grande partie du code a été générée avec
 
 L’IA a également été sollicitée pour l’aide à la résolution d’erreurs, l’explication du fonctionnement de certaines bibliothèques Python et l’amélioration de la lisibilité du code. Enfin, elle a contribué à la rédaction du rapport, notamment pour la reformulation de passages et la clarification de certaines explications.
 
-Dans l'ensemble, l'IA a beaucoup été utilisé pour nous permettre d'avancer dans le projet et de ne pas rester bloquer par manque de connaissance dans le domaine et dans la programmation. Toutefois, les réponses fournies par l'IA ont été analysées afin de les aligner avec les objectifs fixés et la vision globale du projet.
+Dans l'ensemble, l'IA a beaucoup été utilisé pour nous permettre d'avancer dans le projet et de ne pas rester bloquer par manque de connaissance dans le domaine et dans la programmation.
 
 \newpage
 \section{Fonctionnement de l’agent d’intelligence artificielle et intégration des réponses dans le code}
