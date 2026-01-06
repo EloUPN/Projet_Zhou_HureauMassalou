@@ -9,8 +9,8 @@ Ce dépôt contient l’implémentation complète d’un agent intelligent de ne
 
 | Dossier | Description |
 |--------|-------------|
-| `archives/` | Première version abandonnée du projet (non utilisée pour l’évaluation) |
 | `SmartData_Cleaner/` | **Version finale du projet** (code source + README complet) |
+| `archives/` | Première version abandonnée du projet (non utilisée pour l’évaluation) |
 | `rapport/` | Tous les fichiers nécessaires à la compilation du rapport |
 
 ---
